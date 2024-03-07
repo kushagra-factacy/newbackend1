@@ -2,7 +2,7 @@ import ApiError from "../error/api.error.js";
 
 import { connect } from "../database.js";
 
-import { cdb, aicite } from "../constant.js";
+import { cdb, aicite_ic } from "../constant.js";
 
 export const industrial_portfolio = async (req, res, next) => {
   try {
@@ -21,12 +21,11 @@ export const industrial_portfolio = async (req, res, next) => {
           name: "@keyword2",
           value: sterm,
         },
-      ],
-    };
+      ],   };
 
-    // console.log(querySpec);
+     console.log(querySpec);
 
-    const dbconnect = await connect(cdb, aicite);
+    const dbconnect = await connect(cdb, aicite_ic);
     const { resources } = await dbconnect.container.items
       .query(querySpec)
       .fetchAll();
