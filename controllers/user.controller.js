@@ -6,7 +6,7 @@ export const isignup = async(req, res,next) => {
     try{
         // res.send('isignup route')
         // console(req.body)
-        res.send(req.body);
+        res.send("hello");
         // const {  email, password } = req.body;
         // console.log(email, password);
         // res.send("User Registered", email, password);
