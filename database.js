@@ -2,8 +2,9 @@ import { CosmosClient } from "@azure/cosmos";
 
 
 const endpoint= process.env.COSMOS_ENDPOINT;
-const key = process.env.COSMOS_KEY;
-console.log(process.env.COSMOS_KEY);
+const key = process.env.COSMOSDB_KEY;
+console.log(process.env.COSMOSDB_KEY);
+
 const cosmosclient = new CosmosClient({endpoint,key});
 export  async function connect(db , con) {
     try{
