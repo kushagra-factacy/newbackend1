@@ -1,4 +1,8 @@
 
+const jwt = require('jsonwebtoken')
+const saltRounds = 8 ;
+const bcrypt = require('bcrypt')
+
 import { Router } from 'express';
 import { isignup, tsignup, tlogin, ilogin } from '../controllers/user.controller.js';
 
