@@ -7,6 +7,6 @@ const router = Router();
 
 router.route('/industrial_portfolio').get(industrial_portfolio);
 
+router.route('/main_sector').get(main_sector);
 
-// router.route('/search').get(deal);
 export default router;
