@@ -1,7 +1,7 @@
 
 
 import { Router } from "express";
-import {industrial_portfolio} from "../controllers/cdb.controller.js";
+import {industrial_portfolio,main_sector} from "../controllers/cdb.controller.js";
 
 const router = Router();
 
