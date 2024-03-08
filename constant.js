@@ -1,4 +1,5 @@
 //cdb
+export const cdb ="cdb";
 export const ai_Profile = "AI-Profile"
 export const aicite_ic = "AICITE-IC"
 export const aka = "AKA"

@@ -69,7 +69,7 @@ export const deal30 = async ( req, res , next ) => {
       c.Corrected_Amount, c.Corrected_Series, c.Corrected_Investors, c.Corrected_Vision,
       c.Status, c.Sector, c.Sector_Classification, c.Unique_date_time FROM c
       WHERE DateTimeDiff("day", c.published_date, GetCurrentDateTime()) <= 30
-      AND c.Status != 'Invalid Article'`
+      c.Status IN('Cofirmed', 'Signal' , 'Updated' ,'VC Fund')'`
     }
     //console.log(queryspec); 
     const dbconnect = await connect(heimdall,deal_id);
@@ -89,7 +89,7 @@ export const deal60 = async (req , res , next) =>{
       c.Corrected_Amount, c.Corrected_Series, c.Corrected_Investors, c.Corrected_Vision,
       c.Status, c.Sector, c.Sector_Classification, c.Unique_date_time FROM c
       WHERE DateTimeDiff("day", c.published_date, GetCurrentDateTime()) <= 60
-      AND c.Status != 'Invalid Article'`
+      c.Status IN('Cofirmed', 'Signal' , 'Updated' ,'VC Fund')'`
     }
     const dbconnect = await connect(heimdall,deal_id);
     const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
@@ -108,7 +108,7 @@ export const deal90 = async (req , res ,next) => {
       c.Corrected_Amount, c.Corrected_Series, c.Corrected_Investors, c.Corrected_Vision,
       c.Status, c.Sector, c.Sector_Classification, c.Unique_date_time FROM c
       WHERE DateTimeDiff("day", c.published_date, GetCurrentDateTime()) <= 90
-      AND c.Status != 'Invalid Article'`
+      c.Status IN('Cofirmed', 'Signal' , 'Updated' ,'VC Fund')'`
     }
     const dbconnect = await connect(heimdall,deal_id);
     const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
