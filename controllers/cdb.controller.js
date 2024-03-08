@@ -3,6 +3,7 @@ import ApiError from "../error/api.error.js";
 import { connect } from "../database.js";
 
 import { cdb, aicite_ic } from "../constant.js";
+import { application } from "express";
 
 export const industrial_portfolio = async (req, res, next) => {
   try {
@@ -34,3 +35,14 @@ export const industrial_portfolio = async (req, res, next) => {
     next(new ApiError(500, "Internal Server Error", [], err.stack));
   }
 };
+
+export const deal = async ( req , res )=> {
+  try{  
+
+
+    
+
+  }catch (err){
+    req.send("Erro")
+  }
+}
