@@ -3,6 +3,7 @@ import ApiError from "../error/api.error.js";
 import { connect } from "../database.js";
 
 import { cdb, aicite_ic } from "../constant.js";
+import { application } from "express";
 
 export const industrial_portfolio = async (req, res, next) => {
   try {
@@ -34,3 +35,22 @@ export const industrial_portfolio = async (req, res, next) => {
     next(new ApiError(500, "Internal Server Error", [], err.stack));
   }
 };
+
+
+export const main_sector = async (req, res , next) =>{
+  try {
+
+
+    const querySpec= {
+      query :  'SELECT TOP 56 c.Main,c.Sectors_Url FROM c'
+    }
+    const dbconnect = await connect(cdb,all_sectors);
+    const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
+    res.send(resources);    
+
+    
+
+  }catch (err){
+    req.send("Erro")
+  }
+}
