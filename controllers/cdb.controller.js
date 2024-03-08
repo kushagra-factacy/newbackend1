@@ -2,8 +2,8 @@ import ApiError from "../error/api.error.js";
 
 import { connect } from "../database.js";
 
-import { cdb, aicite_ic } from "../constant.js";
-import { application } from "express";
+import { CDB, aicite_ic } from "../constant.js";
+
 
 export const industrial_portfolio = async (req, res, next) => {
   try {
@@ -26,7 +26,7 @@ export const industrial_portfolio = async (req, res, next) => {
 
      console.log(querySpec);
 
-    const dbconnect = await connect(cdb, aicite_ic);
+    const dbconnect = await connect(CDB, aicite_ic);
     const { resources } = await dbconnect.container.items
       .query(querySpec)
       .fetchAll();
@@ -44,7 +44,7 @@ export const main_sector = async (req, res , next) =>{
     const querySpec= {
       query :  'SELECT TOP 56 c.Main,c.Sectors_Url FROM c'
     }
-    const dbconnect = await connect(cdb,all_sectors);
+    const dbconnect = await connect(CDB,all_sectors);
     const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
     res.send(resources);    
 

@@ -1,6 +1,6 @@
 import ApiError from "../error/api.error.js";
 import { connect } from "../database.js";
-import { heimdall,aicite_user } from "../constant.js";
+import { HEIMDALL,aicite_user } from "../constant.js";
 
 
 export const comp = async (req, res, next) => {
@@ -14,7 +14,7 @@ export const comp = async (req, res, next) => {
             ]
         }
         console.log(querySpec);
-        const dbconnect = await connect(heimdall,aicite_user);
+        const dbconnect = await connect(HEIMDALL,aicite_user);
         const {resources} = await dbconnect.container.items.query(querySpec).fetchAll();
         
         if (resources.length == 0){
@@ -43,7 +43,7 @@ export const deal = async ( req , res , next )=>{
           ]
   
         };
-      const dbconnect = await connect(heimdall, deal_id);
+      const dbconnect = await connect(HEIMDALL, deal_id);
       const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
       res.send(resources);
     }catch (err){
@@ -64,7 +64,7 @@ export const deal = async ( req , res , next )=>{
         c.Status IN('Cofirmed', 'Signal' , 'Updated' ,'VC Fund')'`
       }
       //console.log(queryspec); 
-      const dbconnect = await connect(heimdall,deal_id);
+      const dbconnect = await connect(HEIMDALL,deal_id);
       const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
       res.send(resources);
     }catch(err){
@@ -83,7 +83,7 @@ export const deal = async ( req , res , next )=>{
         WHERE DateTimeDiff("day", c.published_date, GetCurrentDateTime()) <= 60
         c.Status IN('Cofirmed', 'Signal' , 'Updated' ,'VC Fund')'`
       }
-      const dbconnect = await connect(heimdall,deal_id);
+      const dbconnect = await connect(HEIMDALL,deal_id);
       const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
       res.send(resources);
     }catch (err){
@@ -102,7 +102,7 @@ export const deal = async ( req , res , next )=>{
         WHERE DateTimeDiff("day", c.published_date, GetCurrentDateTime()) <= 90
         c.Status IN('Cofirmed', 'Signal' , 'Updated' ,'VC Fund')'`
       }
-      const dbconnect = await connect(heimdall,deal_id);
+      const dbconnect = await connect(HEIMDALL,deal_id);
       const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
       res.send(resources);     
     }catch (err){

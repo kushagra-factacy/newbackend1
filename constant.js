@@ -1,5 +1,11 @@
+//databses
+export const CDB = "cdb-L1"
+export const HEIMDALL = 'heimdall-db'
+export const FINANCIAL ='financials-db'
+
 //cdb
-export const cdb = "cdb-L1"
+
+
 export const ai_Profile = "AI-Profile"
 export const aicite_ic = "AICITE-IC"
 export const aka = "AKA"
@@ -32,7 +38,7 @@ export  const testing = "testing"
 //heimdell db
 export const aicite_user = 'Aicite-User'
 export const deal_id = "Deal-Id"
-export const heimdall = "heimdall"
+
 export const heimdall_new = "heimdall-new"
 export const heimdall_v2 = "heimdall-v2"
 export const incite_user = "Incite-User"
