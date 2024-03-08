@@ -36,10 +36,23 @@ export const industrial_portfolio = async (req, res, next) => {
   }
 };
 
+<<<<<<< HEAD
 export const deal = async ( req , res )=> {
   try{  
 
 
+=======
+export const main_sector = async (req, res , next) =>{
+  try {
+
+
+    const querySpec= {
+      query :  'SELECT TOP 56 c.Main,c.Sectors_Url FROM c'
+    }
+    const dbconnect = await connect(cdb,all_sectors);
+    const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
+    res.send(resources);    
+>>>>>>> c4cc4086105e3331b94a30f31538f5f352a35a74
     
 
   }catch (err){
