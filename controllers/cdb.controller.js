@@ -51,6 +51,6 @@ export const main_sector = async (req, res , next) =>{
     
 
   }catch (err){
-    req.send("Erro")
+    next(new ApiError(500, "Internal Server Error", [], err.stack));
   }
 }

@@ -1,6 +1,6 @@
 import ApiError from "../error/api.error.js";
 import { connect } from "../database.js";
-import { HEIMDALL,aicite_user } from "../constant.js";
+import { HEIMDALL,aicite_user, deal_id} from "../constant.js";
 
 
 export const comp = async (req, res, next) => {
@@ -59,9 +59,9 @@ export const deal = async ( req , res , next )=>{
       const querySpec= {
         query: `SELECT  c.id, c.Output_CIN,  c.Legal_Name, c.Art_Id , c.date,  c.Corrected_Investee,
         c.Corrected_Amount, c.Corrected_Series, c.Corrected_Investors, c.Corrected_Vision,
-        c.Status, c.Sector, c.Sector_Classification, c.Unique_date_time FROM c
+        c.Status, c.Sector, c.Sector_Classification, c.Unique_date_time FROM c 
         WHERE DateTimeDiff("day", c.published_date, GetCurrentDateTime()) <= 30
-        c.Status IN('Cofirmed', 'Signal' , 'Updated' ,'VC Fund')'`
+        AND c.Status IN('Cofirmed', 'Signal' , 'Updated' ,'VC Fund')`
       }
       //console.log(queryspec); 
       const dbconnect = await connect(HEIMDALL,deal_id);
@@ -79,15 +79,15 @@ export const deal = async ( req , res , next )=>{
       const querySpec= {
         query: `SELECT  c.id, c.Output_CIN,  c.Legal_Name, c.Art_Id , c.date,  c.Corrected_Investee,
         c.Corrected_Amount, c.Corrected_Series, c.Corrected_Investors, c.Corrected_Vision,
-        c.Status, c.Sector, c.Sector_Classification, c.Unique_date_time FROM c
+        c.Status, c.Sector, c.Sector_Classification, c.Unique_date_time FROM c 
         WHERE DateTimeDiff("day", c.published_date, GetCurrentDateTime()) <= 60
-        c.Status IN('Cofirmed', 'Signal' , 'Updated' ,'VC Fund')'`
+        AND c.Status IN('Cofirmed', 'Signal' , 'Updated' ,'VC Fund')`
       }
       const dbconnect = await connect(HEIMDALL,deal_id);
       const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
       res.send(resources);
     }catch (err){
-      console.log("Error");
+      
       next(new ApiError(500, "Internal Server Error", [], err.stack));
     }
   }
@@ -100,12 +100,12 @@ export const deal = async ( req , res , next )=>{
         c.Corrected_Amount, c.Corrected_Series, c.Corrected_Investors, c.Corrected_Vision,
         c.Status, c.Sector, c.Sector_Classification, c.Unique_date_time FROM c
         WHERE DateTimeDiff("day", c.published_date, GetCurrentDateTime()) <= 90
-        c.Status IN('Cofirmed', 'Signal' , 'Updated' ,'VC Fund')'`
+        AND c.Status IN('Cofirmed', 'Signal' , 'Updated' ,'VC Fund')`
       }
       const dbconnect = await connect(HEIMDALL,deal_id);
       const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
       res.send(resources);     
     }catch (err){
-      console.log("Error");
+      next(new ApiError(500, "Internal Server Error", [], err.stack));
     }
   }
