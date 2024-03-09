@@ -58,16 +58,12 @@ export const main_sector = async (req, res , next) =>{
 export const cnews = async (req , res , next ) =>{
   try{
     const sterm = req.query.sterm;
-    console.log(sterm);
-    const num = req.query.value;
+    console.log(sterm);    
     const querySpec = {
       query:
-        `SELECT  TOP @keyword1 * FROM c WHERE  STARTSWITH(c.id, @keyword2)`,
+        `SELECT   * FROM c WHERE  STARTSWITH(c.id, @keyword2)`,
       parameters: [
-        {
-          name: "@keyword1",
-          value: parseInt(num),
-        },
+        
         {
           name: "@keyword2",
           value: sterm,
