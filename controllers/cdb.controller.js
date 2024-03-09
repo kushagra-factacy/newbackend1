@@ -2,7 +2,7 @@ import ApiError from "../error/api.error.js";
 
 import { connect } from "../database.js";
 
-import { CDB, aicite_ic } from "../constant.js";
+import { CDB, aicite_ic, business_news } from "../constant.js";
 
 
 export const industrial_portfolio = async (req, res, next) => {
@@ -51,6 +51,34 @@ export const main_sector = async (req, res , next) =>{
     
 
   }catch (err){
+    next(new ApiError(500, "Internal Server Error", [], err.stack));
+  }
+}
+
+export const cnews = async (req , res , next ) =>{
+  try{
+    const sterm = req.query.sterm;
+    console.log(sterm);
+    const num = req.query.value;
+    const querySpec = {
+      query:
+        `SELECT  TOP @keyword1 * FROM c WHERE  STARTSWITH(c.id, @keyword2)`,
+      parameters: [
+        {
+          name: "@keyword1",
+          value: parseInt(num),
+        },
+        {
+          name: "@keyword2",
+          value: sterm,
+        },
+      ],  
+     };
+     console.log(querySpec);
+    const dbconnect = await connect(CDB, business_news);
+    const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
+    res.send(resources);
+  }catch(err){
     next(new ApiError(500, "Internal Server Error", [], err.stack));
   }
 }
