@@ -4,8 +4,6 @@ export const HEIMDALL = 'heimdall-db'
 export const FINANCIAL ='financials-db'
 
 //cdb
-
-
 export const ai_Profile = "AI-Profile"
 export const aicite_ic = "AICITE-IC"
 export const aka = "AKA"
