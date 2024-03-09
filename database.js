@@ -8,8 +8,11 @@ console.log(process.env.COSMOSDB_KEY);
 const cosmosclient = new CosmosClient({endpoint,key});
 export  async function connect(db , con) {
     try{
-        const { database } = await cosmosclient.databases.createIfNotExists({ id: db });
-        const {container} = await database.containers.createIfNotExists({ id: con });
+        // const { database } = await cosmosclient.databases.createIfNotExists({ id: db });
+        // const {container} = await database.containers.createIfNotExists({ id: con });
+        // return {container}
+        const  database  =  cosmosclient.database(db );
+        const container =  database.container(con);
         return {container}
 
     }
