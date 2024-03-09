@@ -2,7 +2,7 @@ import ApiError from "../error/api.error.js";
 
 import { connect } from "../database.js";
 
-import { CDB, aicite_ic } from "../constant.js";
+import { CDB, aicite_ic,all_sectors } from "../constant.js";
 
 
 export const industrial_portfolio = async (req, res, next) => {
