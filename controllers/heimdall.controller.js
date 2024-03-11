@@ -147,7 +147,7 @@ export const deal = async ( req , res , next )=>{
   }
   export const seed_information = async (req, res, next) => {
     try{
-
+      
       const querySpec= {
         query: `SELECT TOP 2 * FROM c ORDER BY c.published_date DESC`
       }
@@ -158,3 +158,4 @@ export const deal = async ( req , res , next )=>{
       next(new ApiError(500, "Internal Server Error", [], err.stack));
     }
   }
+   
