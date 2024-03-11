@@ -125,7 +125,7 @@ export const deal = async ( req , res , next )=>{
   export const patents = async (req, res, next) => {
     try{
 
-      const sterm = req.query.sterm;
+    const sterm = req.query.sterm;
     console.log(sterm);    
     const querySpec = {
       query:
@@ -158,4 +158,40 @@ export const deal = async ( req , res , next )=>{
       next(new ApiError(500, "Internal Server Error", [], err.stack));
     }
   }
-   
+  export const investor_alt = async (req, res, next) => {
+    try{
+
+      const sterm = req.query.sterm;
+    console.log(sterm);    
+    const querySpec = {
+      query:
+        `SELECT * FROM c where ARRAY_CONTAINS( @keyword,c.id) `,
+      parameters: [
+        
+         {
+          name: "@keyword",
+          value: sterm,
+        },
+      ], 
+      }
+      const dbconnect = await connect(HEIMDALL,deal_id);
+      const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
+      res.send(resources);
+    }catch(err){
+      next(new ApiError(500, "Internal Server Error", [], err.stack));
+    }
+  }
+  export const seed_info_detail = async (req, res, next) => {
+    try{
+      const seed = req.query.input
+      //const value = req.query.number
+      const querySpec= {
+        query: `SELECT TOP 20 * FROM c WHERE c.Corrected_Series =${seed} AND (c.Status = 'Updated' OR c.Status = 'Confirmed')`
+      }
+      const dbconnect = await connect(HEIMDALL,deal_id);
+      const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
+      res.send(resources);
+    }catch(err){
+      next(new ApiError(500, "Internal Server Error", [], err.stack));
+    }
+  }

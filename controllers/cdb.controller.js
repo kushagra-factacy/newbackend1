@@ -2,7 +2,7 @@ import ApiError from "../error/api.error.js";
 
 import { connect } from "../database.js";
 
-import { CDB, aicite_ic,all_sectors, business_news } from "../constant.js";
+import { CDB, ai_Profile, aicite_ic,all_sectors, business_news } from "../constant.js";
 
 
 export const industrial_portfolio = async (req, res, next) => {
@@ -183,3 +183,28 @@ export const news_intel = async (req, res, next) => {
       next(new ApiError(500, "Internal Server Error", [], err.stack));
     }
   }
+  export const mca_cin_info = async (req , res , next ) =>{
+    try{
+      const sterm = req.query.sterm;
+      console.log(sterm);    
+      const querySpec = {
+        query:
+          `SELECT * FROM c WHERE c.MCA_CIN = @keyword`,
+        parameters: [
+          
+           {
+            name: "@keyword",
+            value: sterm,
+          },
+        ],  
+       };
+       console.log(querySpec);
+      const dbconnect = await connect(CDB, ai_Profile);
+      const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
+      res.send(resources);
+    }catch(err){
+      next(new ApiError(500, "Internal Server Error", [], err.stack));
+    }
+  }
+
+  
