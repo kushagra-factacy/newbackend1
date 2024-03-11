@@ -145,3 +145,16 @@ export const deal = async ( req , res , next )=>{
       next(new ApiError(500, "Internal Server Error", [], err.stack));
     }
   }
+  export const seed_information = async (req, res, next) => {
+    try{
+
+      const querySpec= {
+        query: `SELECT TOP 2 * FROM c ORDER BY c.published_date DESC`
+      }
+      const dbconnect = await connect(HEIMDALL,deal_id);
+      const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
+      res.send(resources);
+    }catch(err){
+      next(new ApiError(500, "Internal Server Error", [], err.stack));
+    }
+  }
