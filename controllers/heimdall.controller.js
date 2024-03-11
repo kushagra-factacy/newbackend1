@@ -122,6 +122,8 @@ export const deal = async ( req , res , next )=>{
       next(new ApiError(500, "Internal Server Error", [], err.stack));
     }
   }
+
+  /*-----------------------------------------------------------------------------*/
   export const patents = async (req, res, next) => {
     try{
 
@@ -145,6 +147,8 @@ export const deal = async ( req , res , next )=>{
       next(new ApiError(500, "Internal Server Error", [], err.stack));
     }
   }
+
+  /*-------------------------------------------------------------------*/
   export const seed_information = async (req, res, next) => {
     try{
       
@@ -158,11 +162,16 @@ export const deal = async ( req , res , next )=>{
       next(new ApiError(500, "Internal Server Error", [], err.stack));
     }
   }
+  
+  
   export const investor_alt = async (req, res, next) => {
     try{
 
       const sterm = req.query.sterm;
-    console.log(sterm);    
+      const trimmedInput = sterm.replace(/"/g, "");
+    const art=trimmedInput.split(",")
+  
+    console.log(art);    
     const querySpec = {
       query:
         `SELECT * FROM c where ARRAY_CONTAINS( @keyword,c.id) `,
@@ -170,10 +179,11 @@ export const deal = async ( req , res , next )=>{
         
          {
           name: "@keyword",
-          value: sterm,
+          value: art,
         },
       ], 
       }
+      console.log(querySpec);
       const dbconnect = await connect(HEIMDALL,deal_id);
       const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
       res.send(resources);

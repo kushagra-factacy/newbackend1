@@ -78,23 +78,30 @@ export const cnews = async (req , res , next ) =>{
     next(new ApiError(500, "Internal Server Error", [], err.stack));
   }
 }
+
+
 export const getarts = async (req , res , next ) =>{
   try{
     const sterm = req.query.sterm;
-    console.log(sterm);    
+    
+    const trimmedInput = sterm.replace(/"/g, "");
+    const art=trimmedInput.split(",")
+    console.log(sterm);
+    
     const querySpec = {
       query:
         `SELECT * FROM c where ARRAY_CONTAINS( @keyword1, c.Art_Id )`,
       parameters: [
           {
           name: "@keyword1", 
-          value: sterm,
+          value: art,
         },
       ],  
      };
      console.log(querySpec);
     const dbconnect = await connect(CDB, aicite_ic);
     const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
+    console.log(resources);
     res.send(resources);
   }catch(err){
     next(new ApiError(500, "Internal Server Error", [], err.stack));
