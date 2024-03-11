@@ -61,10 +61,10 @@ export const cnews = async (req , res , next ) =>{
     console.log(sterm);    
     const querySpec = {
       query:
-        `SELECT   * FROM c WHERE  STARTSWITH(c.id, @keyword2)`,
+        `SELECT  * FROM c WHERE  STARTSWITH(c.id, @keyword2)`,
       parameters: [
         
-        {
+         {
           name: "@keyword2",
           value: sterm,
         },
@@ -78,3 +78,50 @@ export const cnews = async (req , res , next ) =>{
     next(new ApiError(500, "Internal Server Error", [], err.stack));
   }
 }
+export const getarts = async (req , res , next ) =>{
+  try{
+    const sterm = req.query.sterm;
+    console.log(sterm);    
+    const querySpec = {
+      query:
+        `SELECT * FROM c where ARRAY_CONTAINS( @keyword1, c.Art_Id )`,
+      parameters: [
+          {
+          name: "@keyword1", 
+          value: sterm,
+        },
+      ],  
+     };
+     console.log(querySpec);
+    const dbconnect = await connect(CDB, aicite_ic);
+    const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
+    res.send(resources);
+  }catch(err){
+    next(new ApiError(500, "Internal Server Error", [], err.stack));
+  }
+}
+
+export const funding = async (req , res , next ) =>{
+  try{
+    const sterm = req.query.sterm;
+    console.log(sterm);    
+    const querySpec = {
+      query:
+        `SELECT TOP 100 * FROM c where c.Funding_Alert ='Funding' ORDER BY c.Unique_date_time desc`,
+      parameters: [
+        
+         {
+          name: "@keyword2",
+          value: sterm,
+        },
+      ],  
+     };
+     console.log(querySpec);
+    const dbconnect = await connect(CDB, aicite_ic);
+    const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
+    res.send(resources);
+  }catch(err){
+    next(new ApiError(500, "Internal Server Error", [], err.stack));
+  }
+}
+
