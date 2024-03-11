@@ -160,3 +160,26 @@ export const news_intel = async (req, res, next) => {
       next(new ApiError(500, "Internal Server Error", [], err.stack));
     }
   }
+  export const getids = async (req , res , next ) =>{
+    try{
+      const sterm = req.query.sterm;
+      console.log(sterm);    
+      const querySpec = {
+        query:
+          `SELECT * FROM c where c.ORG LIKE @keyword`,
+        parameters: [
+          
+           {
+            name: "@keyword",
+            value: sterm,
+          },
+        ],  
+       };
+       console.log(querySpec);
+      const dbconnect = await connect(CDB, business_news);
+      const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
+      res.send(resources);
+    }catch(err){
+      next(new ApiError(500, "Internal Server Error", [], err.stack));
+    }
+  }
