@@ -1,7 +1,7 @@
 
 
 import { Router } from "express";
-import { industrial_portfolio, main_sector, cnews ,getarts,funding} from "../controllers/cdb.controller.js";
+import { industrial_portfolio, main_sector, cnews ,getarts,funding,news_intel} from "../controllers/cdb.controller.js";
 
 const router = Router();
 
@@ -15,4 +15,6 @@ router.route('/getarts').get(getarts);
 
 router.route('/funding').get(funding);
 
+
+router.route('/news_intel').get(news_intel);
 export default router;

@@ -1,6 +1,6 @@
 import ApiError from "../error/api.error.js";
 import { connect } from "../database.js";
-import { HEIMDALL,aicite_user, deal_id,trending_news} from "../constant.js";
+import { HEIMDALL,aicite_user, deal_id,patent,trending_news} from "../constant.js";
 
 
 export const comp = async (req, res, next) => {
@@ -116,6 +116,29 @@ export const deal = async ( req , res , next )=>{
         query: `SELECT TOP 2 * FROM c ORDER BY c.published_date DESC`
       }
       const dbconnect = await connect(HEIMDALL,trending_news);
+      const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
+      res.send(resources);
+    }catch(err){
+      next(new ApiError(500, "Internal Server Error", [], err.stack));
+    }
+  }
+  export const patents = async (req, res, next) => {
+    try{
+
+      const sterm = req.query.sterm;
+    console.log(sterm);    
+    const querySpec = {
+      query:
+        `SELECT * FROM c WHERE c.MCA_CIN = @keyword `,
+      parameters: [
+        
+         {
+          name: "@keyword",
+          value: sterm,
+        },
+      ], 
+      }
+      const dbconnect = await connect(HEIMDALL,patent);
       const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
       res.send(resources);
     }catch(err){

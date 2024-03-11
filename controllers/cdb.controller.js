@@ -124,4 +124,16 @@ export const funding = async (req , res , next ) =>{
     next(new ApiError(500, "Internal Server Error", [], err.stack));
   }
 }
+export const news_intel = async (req, res, next) => {
+    try{
 
+      const querySpec= {
+        query: `SELECT TOP 100 * from c where c.esg_category != 'NON ESG' order by c.Unique_date_time desc`
+      }
+      const dbconnect = await connect(CDB,aicite_ic);
+      const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
+      res.send(resources);
+    }catch(err){
+      next(new ApiError(500, "Internal Server Error", [], err.stack));
+    }
+  }
