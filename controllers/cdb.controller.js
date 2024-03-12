@@ -2,7 +2,7 @@ import ApiError from "../error/api.error.js";
 
 import { connect } from "../database.js";
 
-import { CDB, ai_Profile, aicite_ic,all_sectors, business_news } from "../constant.js";
+import { CDB, ai_Profile, aicite_ic,all_sectors, business_news, patent_IC } from "../constant.js";
 
 
 export const industrial_portfolio = async (req, res, next) => {
@@ -214,4 +214,30 @@ export const news_intel = async (req, res, next) => {
     }
   }
 
+  export const patentsearch = async (req, res, next) => {
+    try{
+
+      const sterm = req.query.sterm;
+      const trimmedInput = sterm.replace(/"/g, "");
+    const art=trimmedInput.split(",")
   
+    console.log(art);    
+    const querySpec = {
+      query:
+        `SELECT * FROM c where ARRAY_CONTAINS( @keyword,c.id) `,
+      parameters: [
+        
+         {
+          name: "@keyword",
+          value: art,
+        },
+      ], 
+      }
+      console.log(querySpec);
+      const dbconnect = await connect(CDB,patent_IC);
+      const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
+      res.send(resources);
+    }catch(err){
+      next(new ApiError(500, "Internal Server Error", [], err.stack));
+    }
+  }

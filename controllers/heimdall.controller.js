@@ -1,7 +1,8 @@
 import ApiError from "../error/api.error.js";
 import { connect } from "../database.js";
-import { HEIMDALL,aicite_user, deal_id,patent,trending_news} from "../constant.js";
+import { HEIMDALL,aicite_user, deal_id,heimdall_v2,investor_id,patent,trending_news} from "../constant.js";
 
+/*--------------------------------------------------------------------------------------------*/
 
 export const comp = async (req, res, next) => {
     try{
@@ -204,4 +205,55 @@ export const deal = async ( req , res , next )=>{
     }catch(err){
       next(new ApiError(500, "Internal Server Error", [], err.stack));
     }
+  };
+  /*------------------------------------------------------------------ */
+  
+  // export const bname = async (req, res, next) => {
+  //   try{
+
+  //   const sterm = req.query.sterm;
+  //   console.log(sterm);    
+  //   const querySpec = {
+  //     query:
+  //       `SELECT * FROM heimdall c WHERE  STARTSWITH(c.AKA_Brand_Name, @keyword) `,
+  //     parameters: [
+        
+  //        {
+  //         name: "@keyword",
+  //         value: sterm,
+  //       },
+  //     ], 
+  //     }
+  //     const dbconnect = await connect(HEIMDALL,heimdall_v2);
+  //     const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
+  //     res.send(resources);
+  //   }catch(err){
+  //     next(new ApiError(500, "Internal Server Error", [], err.stack));
+  //   }
+  // }
+/*  ---------------------------------------------------------------------*/
+export const investor = async (req, res, next) => {
+  try{
+
+    const sterm = req.query.sterm;
+    const trimmedInput = sterm.replace(/"/g, "");
+    const art=trimmedInput.split(",")  
+    const querySpec = {
+    query:
+      `SELECT * FROM c where ARRAY_CONTAINS( @keyword,c.id) `,
+    parameters: [
+      
+       {
+        name: "@keyword",
+        value: art,
+      },
+    ], 
+    }
+    console.log(querySpec);
+    const dbconnect = await connect(HEIMDALL,investor_id);
+    const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
+    res.send(resources);
+  }catch(err){
+    next(new ApiError(500, "Internal Server Error", [], err.stack));
   }
+}
