@@ -1,6 +1,6 @@
 import ApiError from "../error/api.error.js";
 import { connect } from "../database.js";
-import { HEIMDALL,aicite_user, deal_id,patent,trending_news} from "../constant.js";
+import { HEIMDALL,aicite_user, deal_id,investor_id,patent,trending_news} from "../constant.js";
 
 
 export const comp = async (req, res, next) => {
@@ -174,7 +174,7 @@ export const deal = async ( req , res , next )=>{
     console.log(art);    
     const querySpec = {
       query:
-        `SELECT * FROM c where ARRAY_CONTAINS( @keyword,c.id) `,
+        `SELECT * FROM c where ARRAY_CONTAINS( [@keyword],c.id) `,
       parameters: [
         
          {
@@ -199,6 +199,29 @@ export const deal = async ( req , res , next )=>{
         query: `SELECT TOP 20 * FROM c WHERE c.Corrected_Series =${seed} AND (c.Status = 'Updated' OR c.Status = 'Confirmed')`
       }
       const dbconnect = await connect(HEIMDALL,deal_id);
+      const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
+      res.send(resources);
+    }catch(err){
+      next(new ApiError(500, "Internal Server Error", [], err.stack));
+    }
+  }
+  export const investor = async (req, res, next) => {
+    try{
+
+      const sterm = req.query.sterm;
+    console.log(sterm);    
+    const querySpec = {
+      query:
+        `SELECT * FROM c where ARRAY_CONTAINS( [@keyword],c.id) `,
+      parameters: [
+        
+         {
+          name: "@keyword",
+          value: sterm,
+        },
+      ], 
+      }
+      const dbconnect = await connect(HEIMDALL,investor_id);
       const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
       res.send(resources);
     }catch(err){
