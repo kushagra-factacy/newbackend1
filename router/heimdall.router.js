@@ -23,9 +23,13 @@ router.route('/seed_information').get(seed_information);
 
 router.route('/investor_alt').get(investor_alt);
 
-router.route('/seed_info_detail').get(seed_info_detail);
+router.route('/seed_info_detail').get(seed_info_detail)
 
 router.route('/investor').get(investor);
+
+router.route('/seed_info_detail').get(seed_info_detail);
+
+
 
 router.route('/person_id').get(person_id);
 

@@ -1,6 +1,6 @@
 import ApiError from "../error/api.error.js";
 import { connect } from "../database.js";
-import { HEIMDALL,aicite_user, deal_id,heimdall_v2,investor_id,patent,trending_news,person} from "../constant.js";
+import { HEIMDALL,aicite_user, deal_id,investor_id,patent,trending_news,person_all, person} from "../constant.js";
 
 /*--------------------------------------------------------------------------------------------*/
 
@@ -175,7 +175,7 @@ export const deal = async ( req , res , next )=>{
     console.log(art);    
     const querySpec = {
       query:
-        `SELECT * FROM c where ARRAY_CONTAINS( @keyword,c.id) `,
+        `SELECT * FROM c where ARRAY_CONTAINS( [@keyword],c.id) `,
       parameters: [
         
          {
