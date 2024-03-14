@@ -242,7 +242,7 @@ export const news_intel = async (req, res, next) => {
     }
   }
   //--------------------------------------------------------------------------
-  export const sector_id = async (req, res, next) => {
+  export const business_id = async (req, res, next) => {
     try{
 
       const sterm = req.query.sterm;
