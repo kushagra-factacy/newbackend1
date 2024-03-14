@@ -1,4 +1,5 @@
 
+import fs from 'fs';
 import 'dotenv/config'
 
 
@@ -11,6 +12,10 @@ import financials from './router/financial.router.js';
 import cdbrouter from './router/cdb.router.js';
 import cors from 'cors';
 
+const options = {
+    key: fs.readFileSync('/etc/letsencrypt/live/factoq.com/privkey.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/factoq.com/fullchain.pem')
+  };
 
  const app = express();
 app.use(express.json());
