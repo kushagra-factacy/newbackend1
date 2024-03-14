@@ -1,5 +1,9 @@
 import { Router } from "express";
+<<<<<<< HEAD
 import {comp, deal, deal30, deal60, deal90 ,trending, patents,seed_information,investor_alt,seed_info_detail, person_id,investor} from "../controllers/heimdall.controller.js";
+=======
+import {comp, deal, deal30, deal60, deal90 ,trending, patents,seed_information,investor_alt,seed_info_detail,investor, person_id} from "../controllers/heimdall.controller.js";
+>>>>>>> 82d482b09572fb0261d5537ede8c087561eeeac9
 
 const router = Router();
 
@@ -21,13 +25,23 @@ router.route('/seed_information').get(seed_information);
 
 router.route('/investor_alt').get(investor_alt);
 
-router.route('/seed_info_detail').get(seed_info_detail);
+<<<<<<< HEAD
+=======
+router.route('/seed_info_detail').get(seed_info_detail)
 
 router.route('/investor').get(investor);
 
+>>>>>>> 82d482b09572fb0261d5537ede8c087561eeeac9
+router.route('/seed_info_detail').get(seed_info_detail);
+
+
+
 router.route('/person_id').get(person_id);
 
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> 82d482b09572fb0261d5537ede8c087561eeeac9
 export default router;
