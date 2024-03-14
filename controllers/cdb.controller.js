@@ -71,7 +71,7 @@ export const cnews = async (req , res , next ) =>{
       ],  
      };
      console.log(querySpec);
-    const dbconnect = await connect(CDB, business_news);
+    const dbconnect = await connect(CDB,  );
     const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
     res.send(resources);
   }catch(err){

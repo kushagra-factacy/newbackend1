@@ -208,7 +208,7 @@ export const deal = async ( req , res , next )=>{
   };
   /*------------------------------------------------------------------ */
   
-  // export const bname = async (req, res, next) => {
+  // export const investor_by_id = async (req, res, next) => {
   //   try{
 
   //   const sterm = req.query.sterm;

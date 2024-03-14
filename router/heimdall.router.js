@@ -27,6 +27,6 @@ router.route('/seed_info_detail').get(seed_info_detail);
 
 router.route('/investor').get(investor);
 
-//router.route('/bname').get(bname);
+
 
 export default router;
