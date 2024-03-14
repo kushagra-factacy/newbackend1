@@ -1,6 +1,6 @@
 import ApiError from "../error/api.error.js";
 import { connect } from "../database.js";
-import { HEIMDALL,aicite_user, deal_id,heimdall_v2,investor_id,patent,trending_news} from "../constant.js";
+import { HEIMDALL,aicite_user, deal_id,heimdall_v2,investor_id,patent,trending_news,person} from "../constant.js";
 
 /*--------------------------------------------------------------------------------------------*/
 
@@ -251,6 +251,32 @@ export const investor = async (req, res, next) => {
     }
     console.log(querySpec);
     const dbconnect = await connect(HEIMDALL,investor_id);
+    const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
+    res.send(resources);
+  }catch(err){
+    next(new ApiError(500, "Internal Server Error", [], err.stack));
+  }
+}
+/*  ---------------------------------------------------------------------*/
+export const person_id = async (req, res, next) => {
+  try{
+
+    const sterm = req.query.sterm;
+    const trimmedInput = sterm.replace(/"/g, "");
+    const art=trimmedInput.split(",")  
+    const querySpec = {
+    query:
+      `SELECT * FROM c where ARRAY_CONTAINS( @keyword,c.id) `,
+    parameters: [
+      
+       {
+        name: "@keyword",
+        value: art,
+      },
+    ], 
+    }
+    console.log(querySpec);
+    const dbconnect = await connect(HEIMDALL,person);
     const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
     res.send(resources);
   }catch(err){
