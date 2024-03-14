@@ -1,11 +1,9 @@
 import { Router } from "express";
-import {comp, deal, deal30, deal60, deal90 ,trending, patents,seed_information,investor_alt,seed_info_detail,investor, person_id,investor} from "../controllers/heimdall.controller.js";
+import {comp, deal, deal30, deal60, deal90 ,trending, patents,seed_information,investor_alt,seed_info_detail, person_id,investor} from "../controllers/heimdall.controller.js";
 
 const router = Router();
 
 router.route('/comp').get(comp);
-
-
 
 router.route('/deal').get(deal);
 
@@ -30,6 +28,6 @@ router.route('/investor').get(investor);
 router.route('/person_id').get(person_id);
 
 
-router.route('/investor').get(investor);
+
 
 export default router;

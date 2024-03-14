@@ -26,4 +26,6 @@ router.route('/mca_cin_info').get(mca_cin_info);
 router.route('/patentsearch').get(patentsearch);
 
 router.route('/business_id').get(business_id);
+
+
 export default router;
