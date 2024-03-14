@@ -1,7 +1,7 @@
 
 
 import { Router } from "express";
-import { industrial_portfolio, main_sector, cnews ,getarts,funding,news_intel,news,getids,mca_cin_info,patentsearch,business_id} from "../controllers/cdb.controller.js";
+import { industrial_portfolio, main_sector, cnews ,getarts,funding,news_intel,news,getids,mca_cin_info,patentsearch,business_id,sector_id} from "../controllers/cdb.controller.js";
 
 const router = Router();
 
@@ -26,4 +26,6 @@ router.route('/mca_cin_info').get(mca_cin_info);
 router.route('/patentsearch').get(patentsearch);
 
 router.route('/business_id').get(business_id);
+
+router.route('/sector_id').get(sector_id);
 export default router;
