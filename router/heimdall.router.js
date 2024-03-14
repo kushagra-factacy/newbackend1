@@ -26,4 +26,5 @@ router.route('/investor_alt').get(investor_alt);
 router.route('/seed_info_detail').get(seed_info_detail)
 
 router.route('/investor').get(investor);
+
 export default router;
