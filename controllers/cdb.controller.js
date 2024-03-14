@@ -241,3 +241,31 @@ export const news_intel = async (req, res, next) => {
       next(new ApiError(500, "Internal Server Error", [], err.stack));
     }
   }
+  //--------------------------------------------------------------------------
+  export const sector_id = async (req, res, next) => {
+    try{
+
+      const sterm = req.query.sterm;
+      const trimmedInput = sterm.replace(/"/g, "");
+    const art=trimmedInput.split(",")
+  
+    console.log(art);    
+    const querySpec = {
+      query:
+        `SELECT * FROM c where ARRAY_CONTAINS( @keyword,c.Output_CIN) `,
+      parameters: [
+        
+         {
+          name: "@keyword",
+          value: art,
+        },
+      ], 
+      }
+      console.log(querySpec);
+      const dbconnect = await connect(CDB,business_news);
+      const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
+      res.send(resources);
+    }catch(err){
+      next(new ApiError(500, "Internal Server Error", [], err.stack));
+    }
+  }
