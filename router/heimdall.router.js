@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {comp, deal, deal30, deal60, deal90 ,trending, patents,seed_information,investor_alt,seed_info_detail,investor,person_details} from "../controllers/heimdall.controller.js";
+import {comp, deal, deal30, deal60, deal90 ,trending, patents,seed_information,investor_alt,seed_info_detail,investor} from "../controllers/heimdall.controller.js";
 
 const router = Router();
 
@@ -26,7 +26,5 @@ router.route('/investor_alt').get(investor_alt);
 router.route('/seed_info_detail').get(seed_info_detail)
 
 router.route('/investor').get(investor);
-
-//router.route('/person_details').get(person_details);
 
 export default router;
