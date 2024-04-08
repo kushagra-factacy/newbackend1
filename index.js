@@ -12,19 +12,20 @@ import financials from './router/financial.router.js';
 import cdbrouter from './router/cdb.router.js';
 import cors from 'cors';
 
-const options = {
-    key: fs.readFileSync('/etc/letsencrypt/live/factoq.com/privkey.pem'),
-    cert: fs.readFileSync('/etc/letsencrypt/live/factoq.com/fullchain.pem')
-  };
+// const options = {
+//     key: fs.readFileSync('/etc/letsencrypt/live/factoq.com/privkey.pem'),
+//     cert: fs.readFileSync('/etc/letsencrypt/live/factoq.com/fullchain.pem')
+//   };
 
  const app = express();
+app.use(cors())
 app.use(express.json());
 app.use(cors(process.env.CORS_ORIGIN));
 
-app.use('/user', userrouter);
-app.use('/heimdall', heimdallrouter);
-app.use('/financial', financials);
-app.use('/cdb', cdbrouter);
+app.use('/backend/user', userrouter);
+app.use('/backend/heimdall', heimdallrouter);
+app.use('/backend/financial', financials);
+app.use('/backend/cdb', cdbrouter);
 
 
 

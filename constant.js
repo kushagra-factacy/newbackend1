@@ -28,6 +28,7 @@ export const person_all = "Person-all"
 export const Shark_tank = "Shark-Tank "
 //export const sharkn = "sharkn"
 export const Unicorn = "Unicorn"
+export const investor_list = "invsetor-list"
 
 //financial db
 export const cap_tables = "cap-tables"
@@ -50,3 +51,7 @@ export const person = "Person"
 //export const stage_id = "stage-Id"
 export const trending_news = "Trending-News"
 
+// AZURE_BLOB
+
+export const blob_excel_cont = 'excel-files'
+export const blob_pdf_cont = 'pdf-files'

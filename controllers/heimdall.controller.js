@@ -211,9 +211,6 @@ export const deal = async ( req , res , next )=>{
     }catch(err){
       next(new ApiError(500, "Internal Server Error", [], err.stack));
     }
-<<<<<<< HEAD
-  }
-=======
   }
 
   // ------------------------------------------------------------------------------------------------
@@ -267,4 +264,3 @@ export const deal = async ( req , res , next )=>{
   //     next(new ApiError(500, "Internal Server Error", [], err.stack));
   //   }
   // }
->>>>>>> dev

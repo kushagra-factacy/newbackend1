@@ -1,12 +1,12 @@
-const express = require ('express')
-const router = require('./index')
-require('dotenv').config({path: './.env'})
+import express from 'express'
+import router  from './index.js'
+import 'dotenv/config'
 
 
 const app = express()
 
 
-port = process.env.PORT || 2000
+port = process.env.PORT || 5001
 
 console.log(process.env.PORT);
 

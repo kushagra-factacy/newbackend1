@@ -2,7 +2,7 @@ import ApiError from "../error/api.error.js";
 
 import { connect } from "../database.js";
 
-import { CDB, ai_Profile, aicite_ic,all_sectors, business_news, patent_IC } from "../constant.js";
+import { CDB, ai_Profile, aicite_ic,all_sectors, business_news, patent_IC , investor_list } from "../constant.js";
 
 
 export const industrial_portfolio = async (req, res, next) => {
@@ -114,7 +114,7 @@ export const funding = async (req , res , next ) =>{
     console.log(sterm);    
     const querySpec = {
       query:
-        `SELECT TOP 100 * FROM c where c.Funding_Alert ='Funding' ORDER BY c.Unique_date_time desc`,
+        `SELECT TOP 100 c.Art_Id,c.Headline,c.url,c.image,c.summary_of_article,c.summary_IC, c.published_date,c.published_date_time,c.Unique_date_time,c.id,c.Aicite_Sectors,c.Funding_Alert FROM c order by c.Unique_date_time desc`,
       parameters: [
         
          {
@@ -150,7 +150,7 @@ export const news_intel = async (req, res, next) => {
       console.log(sterm);    
       const querySpec = {
         query:
-          `SELECT TOP 100 * FROM c order by c.Unique_date_time desc`,
+          `SELECT TOP 100 c.Art_Id,c.Headline,c.url,c.image,c.summary_of_article,c.summary_IC, c.published_date,c.published_date_time,c.Unique_date_time,c.id,c.Aicite_Sectors FROM c order by c.Unique_date_time desc`,
         // parameters: [
           
         //    {
@@ -269,31 +269,150 @@ export const news_intel = async (req, res, next) => {
       next(new ApiError(500, "Internal Server Error", [], err.stack));
     }
   }
-  //----------------------------------------------------------------------------
-  export const sector_id = async (req, res, next) => {
-    try{
-
-      const sterm = req.query.sterm;
-      const trimmedInput = sterm.replace(/"/g, "");
-    const art=trimmedInput.split(",")
-  
-    console.log(art);    
-    const querySpec = {
-      query:
-        `SELECT * FROM c where ARRAY_CONTAINS( @keyword,c.id) `,
-      parameters: [
-        
-         {
-          name: "@keyword",
-          value: art,
-        },
-      ], 
+  // ---------------------------------------------------------------------------------------------------------
+  export const inv_regist = async (req, res, next) => {
+    try {
+      const {first_name , last_name , email , company , phone , password , username , id } = req.body
+      console.log(req.body);
+      const querySpec = {
+        query: `SELECT * from c where c.id = @keyword` , 
+        parameters:[
+          {
+            name: "@keyword" ,
+            value: id,
+          },
+        ],
       }
-      console.log(querySpec);
-      const dbconnect = await connect(CDB,all_sectors);
-      const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
-      res.send(resources);
-    }catch(err){
-      next(new ApiError(500, "Internal Server Error", [], err.stack));
+      console.log(querySpec)
+      const dbconnect = await connect(CDB ,investor_list );
+      console.log("database connected");
+      const {resources: existingInvestors } = await dbconnect.container.items.query(querySpec).fetchAll();
+      console.log(existingInvestors)
+      const existingInvestor = existingInvestors[0] || {};
+      const investor = {...existingInvestor, first_name, last_name, email, company, phone, password, username};
+      await dbconnect.container.items.upsert(investor);
+
+      res.send("data saved successfully");
+    }
+    catch(err){
+      next(new ApiError(500 , "internal server error" , [] ,err.stack));
     }
   }
+  
+  
+// ---------------------------------------------------------------------------------------
+     export const proposed_investor = async (req , res , next ) =>{
+      try{
+        const sterm = req.query.sterm;
+        console.log(sterm);    
+        const querySpec = {
+          query:
+            `SELECT * FROM c where c.id =@keyword`,
+          parameters: [
+            
+             {
+              name: "@keyword",
+              value: sterm,
+            },
+          ],  
+         };
+         console.log(querySpec);
+        const dbconnect = await connect(CDB, investor_list);
+        const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
+        res.send(resources);
+      }catch(err){
+        next(new ApiError(500, "Internal Server Error", [], err.stack));
+      }
+    }
+    
+  
+     
+    // -----------------------------------------------------------------------------------------------
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    //   try{
+
+  //     const sterm = req.query.sterm;
+  //     const trimmedInput = sterm.replace(/"/g, "");
+  //   const art=trimmedInput.split(",")
+  
+  //   console.log(art);    
+  //   const querySpec = {
+  //     query:
+  //       `SELECT * FROM c where ARRAY_CONTAINS( @keyword,c.id) `,
+  //     parameters: [
+        
+  //        {
+  //         name: "@keyword",
+  //         value: art,
+  //       },
+  //     ], 
+  //     }
+  //     console.log(querySpec);
+  //     const dbconnect = await connect(CDB,all_sectors);
+  //     const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
+  //     res.send(resources);
+  //   }catch(err){
+  //     next(new ApiError(500, "Internal Server Error", [], err.stack));
+  //   }
+  // }
+
+// --------------------------------------------------------------------------------------------------
+
+export const i_regist = async (req ,res ,next) =>{
+  try {
+    const {first_name , last_name , email , company , phone , password , username , id } = req.body
+    console.log(req.body);
+    const querySpec = {
+      query: `SELECT c.id from c where c.id = @keyword` , 
+      parameters:[
+        {
+          name: "@keyword" ,
+          value: id,
+
+        },
+
+      ],
+    }
+    console.log(querySpec)
+     const dbconnect = await connect(CDB ,investor_list );
+     console.log("database connected");
+     const {resources } = await dbconnect.container.items.query(querySpec).fetchAll();
+    console.log(resources)
+     const investor = {id, first_name, last_name, email, company, phone, password, username};
+    await dbconnect.container.items.upsert(investor);
+
+    
+    res.send("data saved successfully");
+  }
+  catch(err){
+    next(new ApiError(500 , "internal server error" , [] ,err.stack));
+  }
+
+   }
+
+
+  //---------------------------------------------------------------------
+
+  
