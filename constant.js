@@ -4,6 +4,7 @@ export const HEIMDALL = 'heimdall-db'
 export const FINANCIAL ='financials-db'
 
 //cdb
+export const invester_user = "invester_user"
 export const ai_Profile = "AI-Profile"
 export const aicite_ic = "AICITE-IC"
 export const aka = "AKA"
@@ -11,6 +12,7 @@ export const aka_search= "AKA_Search"
 export const all_sectors = "All-Sectors"
 export const art_id = "art-id"
 export const business_news = "Business-News"
+export const investor_user = "invester_user"
 //export const coinuse = "coinuse"
 export const coinuse_1 = "coinuse-1"
 export const company_recommended = " Company_Recommended"
@@ -47,6 +49,7 @@ export const lei_db = "lei-db"
 export const mca_db = " mca-db"
 export const patent = "patent"
 export const person = "Person"
+
 //export const recommendation= "Recommendation"
 //export const stage_id = "stage-Id"
 export const trending_news = "Trending-News"

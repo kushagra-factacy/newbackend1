@@ -1,6 +1,6 @@
 import ApiError from "../error/api.error.js";
 import { connect } from "../database.js";
-import { HEIMDALL,aicite_user, deal_id,heimdall_v2,investor_id,patent,trending_news,person_all, person} from "../constant.js";
+import { HEIMDALL,CDB,aicite_user, deal_id,heimdall_v2,investor_id,patent,trending_news,person_all, person ,investor_list } from "../constant.js";
 
 /*--------------------------------------------------------------------------------------------*/
 
@@ -241,26 +241,49 @@ export const deal = async ( req , res , next )=>{
     }
   }
   //--------------------------------------------------------------------------------------------
-  // export const person_details = async (req, res, next) => {
-  //   try{
+  
+export const topinvestor = async(req,res,next)=>{
+  const Sector = req.query.sector;
+  // console.log(Sector);
+  try {
+    const querySpec = {
+      query: 'SELECT TOP 5 c.Corrected_Investors FROM c WHERE CONTAINS(c.All_Sectors, @sector) AND c.Status = "Confirmed"',
+      parameters: [
+        { name: '@sector', value: Sector }
+      ]
+    };
+    // console.log(querySpec);
+  let investorNames =[] ;
+  const dbconnect = await connect(HEIMDALL,deal_id);
+   const {resources : items } = await dbconnect.container.items.query(querySpec).fetchAll();
+  //  console.log(items);
+   items.map(item =>{
+    item.Corrected_Investors.forEach(investor => {
+        investorNames.push(investor[1]);
+    });
+});
+investorNames= investorNames.filter(investor=>investor !== 'UNDISCLOSED' )
+investorNames= investorNames.slice(0,3)
+  //  console.log(investorNames)
+   let investorData = [];
+   for (let i = 0 ; i<=3 ;i++)
+   {
+      //  console.log(investorNames[i]);
+       const querySpec2 = {
+          query: `SELECT c.proposed_Investor['${investorNames[i]}'] FROM c`
+      };
+      // console.log(querySpec2);
+      const dbconnect = await connect(CDB, investor_list);
 
-  //     const sterm = req.query.sterm;
-  //   console.log(sterm);    
-  //   const querySpec = {
-  //     query:
-  //       `SELECT * FROM c where ARRAY_CONTAINS( [@keyword],c.id) `,
-  //     parameters: [
-        
-  //        {
-  //         name: "@keyword",
-  //         value: sterm,
-  //       },
-  //     ], 
-  //     }
-  //     const dbconnect = await connect(HEIMDALL,person);
-  //     const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
-  //     res.send(resources);
-  //   }catch(err){
-  //     next(new ApiError(500, "Internal Server Error", [], err.stack));
-  //   }
-  // }
+      let {resources: investor} = await dbconnect.container.items.query(querySpec2).fetchAll();
+      let filteredInvestor = investor.filter(newinvestor => Object.keys(newinvestor).length !== 0);
+
+    if (filteredInvestor.length > 0) {
+        investorData.push(filteredInvestor[0]);
+    }
+}
+res.send(investorData);
+}catch(err){
+  next(new ApiError(500, "Internal Server Error", [], err.stack));
+}
+}

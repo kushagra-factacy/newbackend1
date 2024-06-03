@@ -1,8 +1,11 @@
 import { Router } from "express";
 
-import {comp, deal, deal30, deal60, deal90 ,trending, patents,seed_information,investor_alt,seed_info_detail,investor} from "../controllers/heimdall.controller.js";
+import {comp, deal, deal30, deal60, deal90 ,trending, patents,seed_information,investor_alt,seed_info_detail,investor ,topinvestor} from "../controllers/heimdall.controller.js";
 
 const router = Router();
+
+router.route('/topinvestor').get(topinvestor)
+
 
 router.route('/comp').get(comp);
 

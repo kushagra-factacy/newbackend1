@@ -1,0 +1,11 @@
+module.exports = {
+  apps: [{
+    script: "index.js",
+    watch: ["controllers", "router"],
+    // Delay between restart
+    watch_delay: 100,
+    ignore_watch : ["node_modules", "client/img", "\\.git", "*.log"],
+	instances: 3, // Add this line to specify the number of instances
+    exec_mode: "cluster" // Add this line to enable clustering mode
+  }]
+}

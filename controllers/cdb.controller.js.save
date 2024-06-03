@@ -2,7 +2,7 @@ import ApiError from "../error/api.error.js";
 
 import { connect } from "../database.js";
 
-import { CDB, ai_Profile, aicite_ic,all_sectors, business_news, patent_IC , invester_user,investor_list, } from "../constant.js";
+import { CDB, ai_Profile, aicite_ic,all_sectors, business_news, patent_IC , investor_user,investor_list } from "../constant.js";
 
 import { options } from "../index.js";
 
@@ -138,7 +138,6 @@ export const funding = async (req , res , next ) =>{
     next(new ApiError(500, "Internal Server Error", [], err.stack));
   }
 }
-
 export const news_intel = async (req, res, next) => {
     try{
 
@@ -175,7 +174,6 @@ export const news_intel = async (req, res, next) => {
       next(new ApiError(500, "Internal Server Error", [], err.stack));
     }
   }
-  // -------------------------------------------------------------
   export const getids = async (req , res , next ) =>{
     try{
       const sterm = req.query.sterm;
@@ -199,7 +197,6 @@ export const news_intel = async (req, res, next) => {
       next(new ApiError(500, "Internal Server Error", [], err.stack));
     }
   }
-  // -------------------------------------------------------------------
   export const mca_cin_info = async (req , res , next ) =>{
     try{
       const sterm = req.query.sterm;
@@ -223,7 +220,7 @@ export const news_intel = async (req, res, next) => {
       next(new ApiError(500, "Internal Server Error", [], err.stack));
     }
   }
-// ------------------------------------------------------------------------------------
+
   export const patentsearch = async (req, res, next) => {
     try{
 
@@ -285,98 +282,91 @@ export const news_intel = async (req, res, next) => {
   // ---------------------------------------------------------------------------------------------------------
   export const inv_regist = async (req, res, next) => {
     try {
-        const { first_name, last_name, email, company, phone, password, username, id, gstin } = req.body;
-
-        const querySpec = {
-            query: "SELECT * from c where c.email = @keyword",
-            parameters: [
-                {
-                    name: "@keyword",
-                    value: email,
-                },
-            ],
-        };
-
-        const dbconnect = await connect(CDB, invester_user);
-        const { resources: existingInvestors } = await dbconnect.container.items.query(querySpec).fetchAll();
-
-        if (existingInvestors.length > 0) {
-          
-            return res.send("email id already exist");
-        }
-
-        const hashedpass = await bcrypt.hash(password, saltRounds);
-
-        const investor = { first_name, last_name, email, company, phone, hashedpass, username, id, gstin };
-        await dbconnect.container.items.upsert(investor);
-
-        jwt.sign({ email, hashedpass }, options.key, { algorithm: 'ES256', expiresIn: '1h' }, (err, token) => {
-            if (err) {
-                next(new ApiError(500, "Internal Server Error", [], err.stack));
-            } else {
-                res.send({ token });
-            }
-        });
-
-    } catch (err) {
-        next(new ApiError(500, "internal server error", [], err.stack));
-    }
-} 
-// ---------------------------------------------------------------------------------------
-export const proposed_investor = async (req, res, next) => {
-  try {
-      const sterm = req.query.sterm;
-      console.log(sterm);
-
+      const {first_name , last_name , email , company , phone , password , username , id } = req.body
+      console.log(req.body);
       const querySpec = {
-          query: `SELECT * FROM c where c.id =@keyword`,
-          parameters: [
-              {
-                  name: "@keyword",
-                  value: sterm,
-              },
-          ],
-      };
-
-      console.log(querySpec);
-
-      const dbconnect = await connect(CDB, investor_list);
-      const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
-
-      if (resources.length <= 0) {
-          res.send("No proposed investors found");
-          return;
+        query: `SELECT * from c where c.id = @keyword` , 
+        parameters:[
+          {
+            name: "@keyword" ,
+            value: email,
+          },
+        ],
       }
+      console.log(querySpec)
+      const dbconnect = await connect(CDB ,investor_user );
+      console.log("database connected");
+      const {resources: existingInvestors } = await dbconnect.container.items.query(querySpec).fetchAll();
+      console.log(existingInvestors)
+      const existingInvestor = existingInvestors[0] || {};
+      const hashedpass=await bcrypt.hash(password,saltRounds);
 
-      const tempOBJ = {};
-      const proposedInvestor = resources[0].proposed_Investor;
-
-      if (proposedInvestor && Object.keys(proposedInvestor).length > 0) {
-          const investorKeys = Object.keys(proposedInvestor);
-          const filteredInvestors = {};
-
-          investorKeys.forEach(investor => {
-              if (proposedInvestor[investor].website !== "NO") {
-                  filteredInvestors[investor] = proposedInvestor[investor];
-              }
-          });
-
-          const filteredInvestorKeys = Object.keys(filteredInvestors);
-
-          if (filteredInvestorKeys.length > 0) {
-              filteredInvestorKeys.slice(0, 3).forEach(investor => tempOBJ[investor] = filteredInvestors[investor]);
-              resources[0].proposed_Investor = tempOBJ;
-              res.send(resources);
-              return;
-          }
-      }
-
-      res.send("No proposed investors found with valid websites");
-  } catch (err) {
-      next(new ApiError(500, "Internal Server Error", [], err.stack));
+      const investor = {...existingInvestor, first_name, last_name, email, company, phone, hashedpass, username,id};
+      await dbconnect.container.items.upsert(investor);
+      jwt.sign({ email,hashedpass }, options.key, { algorithm: 'ES256', expiresIn: '1h' }, (err, token) => {
+        if (err) {
+            next(new ApiError(500, "Internal Server Error", [], err.stack));
+        } else {
+            res.send({ token });
+        }
+    });
+      
+    }
+    catch(err){
+      next(new ApiError(500 , "internal server error" , [] ,err.stack));
+    }
   }
+  
+  
+// ---------------------------------------------------------------------------------------
+     export const proposed_investor = async (req , res , next ) =>{
+      try{
+        const sterm = req.query.sterm;
+        console.log(sterm);    
+        const querySpec = {
+          query:
+            `SELECT * FROM c where c.id =@keyword`,
+          parameters: [
+            
+             {
+              name: "@keyword",
+              value: sterm,
+            },
+          ],  
+         };
+         console.log(querySpec);
+
+        const dbconnect = await connect(CDB, investor_list);
+        const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
+        if (resources.length <=0)
+        {
+          res.send("no proposed inv")
+        }
+        const tempOBJ = {};
+        if (resources[0].proposed_Investor !== null && resources[0].proposed_Investor !== 'undefined') {
+            const list = Object.keys(resources[0].proposed_Investor);
+            if (list.length > 3) {
+                list.slice(0, 3).forEach(item => tempOBJ[item] = resources[0].proposed_Investor[item]);
+                resources[0].proposed_Investor = tempOBJ;
+	        
+        res.send(resources);
+            }
+          }
+
+	else{
+	res.send("no proposed investor found")
 }
-// ----------------------------------------------------------------------------------------
+      }
+    
+  
+  
+
+      catch(err){
+        next(new ApiError(500, "Internal Server Error", [], err.stack));
+      }
+    }
+
+
     export const investor_download = async (req , res , next ) =>{
       try{
         const sterm = req.query.sterm;
@@ -439,7 +429,7 @@ export const confirm_user = async (req,res,next)=>{
         ],
       }
       console.log(querySpec)
-      const dbconnect = await connect(CDB ,invester_user );
+      const dbconnect = await connect(CDB ,investor_user );
       console.log("database connected");
 
       const {resources: existingUsers } = await dbconnect.container.items.query(querySpec).fetchAll();
@@ -454,7 +444,7 @@ export const confirm_user = async (req,res,next)=>{
         company_id: company_id,
       };
       // const investor = {...existingInvestors, company_id, mca_company_name};
-      await dbconnect.container.items.upsert(updatedUser);
+      await dbconnect.container.items.replace(updatedUser);
       res.send("user updated")
           
     }
@@ -463,6 +453,26 @@ export const confirm_user = async (req,res,next)=>{
     }
   }
   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -516,7 +526,7 @@ export const confirm_user = async (req,res,next)=>{
 
 export const i_regist = async (req ,res ,next) =>{
   try {
-    const {first_name , last_name , email , company , phone , password , username , id ,gstin } = req.body
+    const {first_name , last_name , email , company , phone , password , username , id } = req.body
     console.log(req.body);
     const querySpec = {
       query: `SELECT c.id from c where c.id = @keyword` , 
@@ -534,7 +544,7 @@ export const i_regist = async (req ,res ,next) =>{
      console.log("database connected");
      const {resources } = await dbconnect.container.items.query(querySpec).fetchAll();
     console.log(resources)
-     const investor = {id, first_name, last_name, email, company, phone, password, username,gstin};
+     const investor = {id, first_name, last_name, email, company, phone, password, username};
     await dbconnect.container.items.upsert(investor);
 
     
@@ -561,7 +571,7 @@ export const inv_login = async (req, res, next) => {
             }],
         };
         console.log(querySpec);
-        const dbconnect = await connect(CDB, invester_user);
+        const dbconnect = await connect(CDB, investor_user);
         const { resources: existingUsers } = await dbconnect.container.items
             .query(querySpec)
             .fetchAll();
@@ -588,7 +598,7 @@ export const inv_login = async (req, res, next) => {
 };
 //-----------------------------------------      -------------------
 //---------------------------------------------------------======
- export const user_final = async(req,res,next)=> {
+ export const investor_user = async(req,res,next)=> {
 try {
         const email = req.query.email;
 
@@ -602,30 +612,14 @@ try {
                 value: email 
             }]
         };
-        // console.log(querySpec);
-        const dbconnect = await connect(CDB , invester_user);
-        const { resources:existingUser } = await dbconnect.container.items.query(querySpec).fetchAll();
+        console.log(querySpec);
+        const dbconnect = await connect(CDB , investor_user);
+        const { resources:existingUser } = await container.items.query(querySpec).fetchAll();
         console.log(existingUser);
-         
-          
-         res.send(existingUser)
-        // console.log(existingUser);
-               
+        res.send(existingUser);         
     } catch (error) {
         console.error("Error querying Cosmos DB:", error);
         res.status(500).send("Error querying Cosmos DB databasee");
     }
 }
 
-// ---------------------------------------------------------------------------------------------------------
-
-export const testRoute = async (req, res, next) => {
-  try {
-    
-    
-    console.log("test route");
-    res.send("Test route executed successfully");
-  } catch (err) {
-    next(new ApiError(500, "Internal Server Error", [], err.stack));
-  }
-}
