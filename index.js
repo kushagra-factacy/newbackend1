@@ -16,12 +16,13 @@ import striperouter from './router/stripe.router.js';
 import blobrouter from './router/blob.router.js'
 import cors from 'cors';
 import bodyParser from 'body-parser';
+import solrouter from './router/solr.router.js';
 
 
-      export const options = {
-          key: fs.readFileSync('/etc/letsencrypt/live/factoq.com-0001/privkey.pem'),
-          cert: fs.readFileSync('/etc/letsencrypt/live/factoq.com-0001/fullchain.pem')
-        };
+ export const options = {
+     key: fs.readFileSync('/etc/letsencrypt/live/factoq.com/privkey.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/factoq.com/fullchain.pem')
+   };
 if (cluster.isPrimary) {
     // Fork workers equal to the number of CPU cores
     for (let i = 0; i < numCPUs; i++) {
@@ -47,11 +48,12 @@ if (cluster.isPrimary) {
       app.use('/backend/cdb', cdbrouter);
       app.use('/backend/stripe' , striperouter);
       app.use('/backend/blob' , blobrouter);
+      app.use('/backend/solr',solrouter)
       
       
       
       
-      const port = process.env.PORT ;
+      const port = 5003 ;
       app.listen(port, () => {
           console.log(`Server is running on port ${port}`);
       });

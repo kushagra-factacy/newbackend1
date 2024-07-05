@@ -285,7 +285,7 @@ export const news_intel = async (req, res, next) => {
   // ---------------------------------------------------------------------------------------------------------
   export const inv_regist = async (req, res, next) => {
     try {
-        const { first_name, last_name, email, company, phone, password, username, id, gstin } = req.body;
+        const { first_name, last_name, email, company, phone, password, username, id, gstin ,site } = req.body;
 
         const querySpec = {
             query: "SELECT * from c where c.email = @keyword",
@@ -307,7 +307,7 @@ export const news_intel = async (req, res, next) => {
 
         const hashedpass = await bcrypt.hash(password, saltRounds);
 
-        const investor = { first_name, last_name, email, company, phone, hashedpass, username, id, gstin };
+        const investor = { first_name, last_name, email, company, phone, hashedpass, username, id, gstin  ,site};
         await dbconnect.container.items.upsert(investor);
 
         jwt.sign({ email, hashedpass }, options.key, { algorithm: 'ES256', expiresIn: '1h' }, (err, token) => {
@@ -586,8 +586,8 @@ export const inv_login = async (req, res, next) => {
         next(new ApiError(500, "Internal Server Error", [], err.stack));
     }
 };
-//-----------------------------------------      -------------------
-//---------------------------------------------------------======
+//------------------------------------------------------------
+//-------------------------------------------------------------
  export const user_final = async(req,res,next)=> {
 try {
         const email = req.query.email;
@@ -629,3 +629,40 @@ export const testRoute = async (req, res, next) => {
     next(new ApiError(500, "Internal Server Error", [], err.stack));
   }
 }
+
+// ----------------------------------------------------
+
+
+export const leading_sectors = async (req, res , next) =>{
+  try {
+
+
+    const querySpec= {
+      query: "SELECT c.Sectors,c.Deal_Id, c.Patent_SOS, c.Application_No_List, ARRAY_LENGTH(c.Deal_Id) AS Length FROM c WHERE c.Sector_Id NOT LIKE '%.%'"
+
+    }
+    const dbconnect = await connect(CDB,all_sectors);
+    const { resources :unsortedResults } = await dbconnect.container.items.query(querySpec).fetchAll();
+    const sortedResults = unsortedResults.sort((a, b) => b.Length - a.Length);
+    
+    var trimmedresult = sortedResults.map((investor)=>{
+      if(Array.isArray(investor.Deal_Id))
+        {
+
+          return {
+           ...investor,
+           Deal_Id: investor.Deal_Id.slice(0,10)
+         }
+        }
+   
+   });
+   
+   res.send(trimmedresult)
+    
+
+  }catch (err){
+    next(new ApiError(500, "Internal Server Error", [], err.stack));
+  }
+}
+// ----------------------------------------------------------------------------------
+

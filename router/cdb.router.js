@@ -1,7 +1,9 @@
 import { Router } from "express";
-import { industrial_portfolio, main_sector, cnews ,getarts,funding,news_intel,news,getids,mca_cin_info,patentsearch,business_id,inv_regist,i_regist,proposed_investor,investor_download,inv_login ,inv_user_detail,confirm_user,user_final, testRoute} from "../controllers/cdb.controller.js";
+import { industrial_portfolio, main_sector, cnews ,getarts,funding,news_intel,news,getids,mca_cin_info,patentsearch,business_id,inv_regist,i_regist,proposed_investor,investor_download,inv_login ,inv_user_detail,confirm_user,user_final, testRoute,leading_sectors} from "../controllers/cdb.controller.js";
 
 const router = Router();
+
+router.route('/leading_sectors').get(leading_sectors)
 
 router.route('/industrial_portfolio').get(industrial_portfolio);
 

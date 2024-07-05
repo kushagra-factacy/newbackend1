@@ -1,6 +1,9 @@
 module.exports = {
   apps: [{
     script: "index.js",
+    env: {
+      COSMOS_KEY: "1EgZPwcg3z2BQo0iV6NIopNk9nTT9Y41wEmhjimdu13BWdGjnFraubblIL2Z1sS9DpdDW8t0hF93ACDbed9pQw=="
+    },
     watch: ["controllers", "router"],
     // Delay between restart
     watch_delay: 100,

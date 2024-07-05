@@ -287,3 +287,49 @@ res.send(investorData);
   next(new ApiError(500, "Internal Server Error", [], err.stack));
 }
 }
+// -----------------------------------------------------------------------------
+export const leading_investor = async (req, res, next) => {
+  try{
+
+     
+  const querySpec = {
+    query:
+      `SELECT  c.Investor, c.id,c.Investor_Bio,c.Investor_Deal_Ids, ARRAY_LENGTH(c.Investor_Deal_Ids) as length FROM c WHERE ARRAY_LENGTH(c.Investor_Deal_Ids) >= 50 AND c.Investor != "UNDISCLOSED" `,
+     
+    }
+    const dbconnect = await connect(HEIMDALL,investor_id);
+    const { resources:unsortedResults } = await dbconnect.container.items.query(querySpec).fetchAll();
+    const sortedResults = unsortedResults.sort((a, b) => b.Length - a.Length);
+    var trimmedresult = sortedResults.map((investor)=>{
+      return {
+       ...investor,
+       Investor_Deal_Ids:investor.Investor_Deal_Ids.slice(0,10)
+     }
+   
+   })
+    res.send(trimmedresult);
+  }catch(err){
+    next(new ApiError(500, "Internal Server Error", [], err.stack));
+  }
+}
+// -----------------------------------------------------------------------------
+
+export const company_deals = async (req, res, next) => {
+  try{
+
+    const inputRefIds= req.query.input;
+  
+    const RefIdsArray=inputRefIds.split(",").map(item=>'"' + item +'"').join(',');
+
+  // console.log(RefIdsArray);    
+  const querySpec = {
+    query: `SELECT * FROM c where ARRAY_CONTAINS( [${RefIdsArray}],c.Reference_Id)`,
+    }
+    // console.log(querySpec);
+    const dbconnect = await connect(HEIMDALL,deal_id);
+    const { resources:data } = await dbconnect.container.items.query(querySpec).fetchAll();
+    res.send(data);
+  }catch(err){
+    next(new ApiError(500, "Internal Server Error", [], err.stack));
+  }
+}

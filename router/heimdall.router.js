@@ -1,11 +1,14 @@
 import { Router } from "express";
 
-import {comp, deal, deal30, deal60, deal90 ,trending, patents,seed_information,investor_alt,seed_info_detail,investor ,topinvestor} from "../controllers/heimdall.controller.js";
+import {comp, deal, deal30, deal60, deal90 ,trending, patents,seed_information,investor_alt,seed_info_detail,investor ,topinvestor,leading_investor,company_deals} from "../controllers/heimdall.controller.js";
 
 const router = Router();
 
+router.route('/company_deals').get(company_deals)
+
 router.route('/topinvestor').get(topinvestor)
 
+router.route('/leading_investor').get(leading_investor)
 
 router.route('/comp').get(comp);
 
