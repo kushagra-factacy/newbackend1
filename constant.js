@@ -2,6 +2,7 @@
 export const CDB = "cdb-L1"
 export const HEIMDALL = 'heimdall-db'
 export const FINANCIAL ='financials-db'
+export const Groot_DB= 'Groot-db' 
 
 //cdb
 export const invester_user = "invester_user"
@@ -31,6 +32,7 @@ export const Shark_tank = "Shark-Tank "
 //export const sharkn = "sharkn"
 export const Unicorn = "Unicorn"
 export const investor_list = "invsetor-list"
+export const blogs = "blogs"
 
 //financial db
 export const cap_tables = "cap-tables"

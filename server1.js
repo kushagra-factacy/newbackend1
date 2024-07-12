@@ -1,8 +1,8 @@
 import express from 'express'
 const app = express();  
-const port = 5001;
+const port = 3000;
 
-app.get('/backend/hello', (req, res) => {
+app.get('/hello', (req, res) => {
   res.send('Hello World!');
 });
 

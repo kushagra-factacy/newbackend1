@@ -4,6 +4,9 @@ import { connect } from "../database.js";
 
 import { CDB, ai_Profile, aicite_ic,all_sectors, business_news, patent_IC , invester_user,investor_list, } from "../constant.js";
 
+
+import {EmailClient} from '@azure/communication-email'
+
 import { options } from "../index.js";
 
 import bcrypt from 'bcrypt'
@@ -299,7 +302,7 @@ export const news_intel = async (req, res, next) => {
 
         const dbconnect = await connect(CDB, invester_user);
         const { resources: existingInvestors } = await dbconnect.container.items.query(querySpec).fetchAll();
-
+        console.log(existingInvestors);
         if (existingInvestors.length > 0) {
           
             return res.send("email id already exist");
@@ -309,9 +312,19 @@ export const news_intel = async (req, res, next) => {
 
         const investor = { first_name, last_name, email, company, phone, hashedpass, username, id, gstin  ,site};
         await dbconnect.container.items.upsert(investor);
+        console.log(email);
+        console.log(first_name);
 
-        jwt.sign({ email, hashedpass }, options.key, { algorithm: 'ES256', expiresIn: '1h' }, (err, token) => {
-            if (err) {
+        // await sendmail(email, first_name).then
+        // (console.log("emailsent"))
+        // .catch((err)=>{
+        //   console.log(err);
+        // })
+        await sendmail(email,first_name)
+        
+        jwt.sign({ email, hashedpass }, options.key, { algorithm: 'RS256', expiresIn: '1h' }, (err, token) => {
+            
+          if (err) {
                 next(new ApiError(500, "Internal Server Error", [], err.stack));
             } else {
                 res.send({ token });
@@ -575,7 +588,7 @@ export const inv_login = async (req, res, next) => {
             return res.status(400).json({ message: 'Invalid password' });
         }
 
-        jwt.sign({ user }, options.key, { algorithm: 'ES256', expiresIn: '1h' }, (err, token) => {
+        jwt.sign({ user }, options.key, { algorithm: 'RS256', expiresIn: '1h' }, (err, token) => {
             if (err) {
                 next(new ApiError(500, "Internal Server Error", [], err.stack));
             } else {
@@ -665,4 +678,211 @@ export const leading_sectors = async (req, res , next) =>{
   }
 }
 // ----------------------------------------------------------------------------------
-
+async function sendmail(email,name) {
+  
+  console.log(email);
+  const connectionString = "endpoint=https://newemail.unitedstates.communication.azure.com/;accesskey=DWH1kigwxmYsXCesRCajzbxVsZIlW1/XSgcogT5AY2FwDr3pLpId8q/Fn8l4AjP1jwbMrDgodmMQRKxFDUxUbA==";
+  const client = new EmailClient(connectionString);
+  const emailMessage = {
+      senderAddress: "DoNotReply@factacy.ai",
+      content: {
+          subject: "Welcome To StartupInvestor.ai",
+          html:`<html>
+ 
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style type="text/css">
+        body {
+            margin: 0;
+            background-color: #f0f1f2;
+        }
+ 
+        table {
+            border-spacing: 0;
+        }
+ 
+        td {
+            padding: 0;
+        }
+ 
+        img {
+            border: 0;
+        }
+ 
+        .wrapper {
+            width: 100%;
+            table-layout: fixed;
+            /* background-color: #f0f1f2; */
+            background-color: #fff;
+            padding-bottom: 60px;
+        }
+ 
+        .main {
+            background-color: #fff;
+            margin: 0 auto;
+            width: 100%;
+            max-width: 600px;
+            border-spacing: 0;
+            font-family: sans-serif;
+            color: #171a1b;
+        }
+ 
+        .two-columns {
+            text-align: center;
+        }
+ 
+        .two-columns .column {
+            /* width: 100%; */
+            /* max-width: 300px; */
+            display: inline-block;
+            vertical-align: top;
+            text-align: center;
+        }
+    </style>
+</head>
+ 
+<body>
+    <center class="wrapper">
+        <table class="main" style="width: 100%; padding: 12px;">
+            <!-- LOGO SECTION -->
+            <tr>
+                <td style=" padding: 14px 0 14px;">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td class="two-columns">
+                                <table class="column">
+                                    <tr>
+                                        <td>
+                                            <img src="https://factacymain.blob.core.windows.net/asset/Factacy-Blue-Logo.jpg" alt="Factacy-log"
+                                                style="height: 36px; margin: 0 auto;">
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <!-- BANNER IMAGE -->
+            <tr>
+                <td style=" text-align: center;">
+                    <!-- <a href="" style="text-align: center; margin: 0 auto;"><img src="./assets/lock.svg" alt=""></a> -->
+                    <table class="column" style=" display: inline-block; vertical-align: top; text-align: center;">
+                        <tr>
+                            <td>
+                                <img src="https://factacymain.blob.core.windows.net/asset/welcome.jpg" style=" margin: 0 auto; width: 200px ;" alt="">
+                            </td>
+                        </tr>
+                    </table>
+ 
+                </td>
+            </tr>
+            <!-- HEADING -->
+            <tr>
+                <td style=" text-align: center;">
+                    <!-- <a href="" style="text-align: center; margin: 0 auto;"><img src="./assets/lock.svg" alt=""></a> -->
+                    <table class="column" style=" display: inline-block; vertical-align: top; text-align: center;">
+                        <tr>
+                            <td>
+                                <h1 class="heading" style="font-size: 24px; font-weight: 800;">Welcome to the Startupinvestors.ai!</h1>
+                            </td>
+                        </tr>
+                    </table>
+ 
+                </td>
+            </tr>
+            <!-- PARAGRAPH TEXT -->
+            <tr>
+                <td style="padding: 0px 18px 8px 0px;">
+                    <!-- <a href="" style="text-align: center; margin: 0 auto;"><img src="./assets/lock.svg" alt=""></a> -->
+                    <p>Hi <span style="font-weight: 600;">${name}</span>,</p>
+                    <p style="margin-top: 0; font-size: 16px; font-weight: 500;">Thank you for signing up on StartupInvestor.ai. We're here to help you discover the investors that match your needs.</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table class="column" style=" display: inline-block; vertical-align: top;">
+                        <tr>
+                            <td>
+                                <div class="thanks" style="padding: 0px 18px 36px 0px;">
+                                    <p style=" margin: 0; font-size: 14px;">Best,</p>
+                                    <h5 style=" margin: 0; font-size: 18px;">Team Factacy</h5>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+ 
+                </td>
+            </tr>
+            <!-- HORIZONTAL BAR -->
+            <tr>
+                <td height="2px" style="background-color: gray;"></td>
+            </tr>
+            <!-- FOOTER SECTION -->
+            <tr>
+                <td style="text-align: center; padding: 18px; padding-top: 24px;">
+                    <table class="column" style=" display: inline-block; vertical-align: top; text-align: center;">
+                        <tr>
+                            <td>
+                                <p class=" paragraph-two" style=" color: white; text-align: center; color: gray;">
+                                    If you have any questions about the information provided or need any assistance, please don't hesitate to reach out to us at
+                                    <a href="mailto:connect@factacy.ai"
+                                        style=" color: #1476BF; text-align: center; text-decoration: none; text-decoration: underline;">connect@factacy.ai
+                                    </a>
+                                    We are here to help you every step of the way.
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+ 
+                </td>
+            </tr>
+            <!-- SOCIAL ICONS -->
+            <tr>
+                <td style="text-align: center;">
+                    <table class="column" style=" display: inline-block; vertical-align: top; text-align: center; ">
+                        <tr>
+                            <td>
+                                <diV class="social-parent"
+                                    style="display: flex; align-items: center; justify-content: center; gap: 6px; padding: 12px 0;">
+                                    <a href="https://twitter.com/FactacyAI/" target="_blank">
+                                        <img style="height: 20px;" class=" social-icon" src="https://factacymain.blob.core.windows.net/asset/x.jpg" alt="X">
+                                    </a>
+                                    <a href="https://www.facebook.com/factacydotAI/" target="_blank">
+                                        <img style="height: 20px;" class=" social-icon" src="https://factacymain.blob.core.windows.net/asset/facebook.jpg"
+                                            alt="facebook">
+                                    </a>
+                                    <a href="https://www.linkedin.com/company/factacy/" target="_blank">
+                                        <img style="height: 20px;" class=" social-icon" src="https://factacymain.blob.core.windows.net/asset/linkedin.jpg"
+                                            alt=" linkedin">
+                                    </a>
+                                </diV>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </center>
+</body>
+ 
+</html>`,
+          
+      },
+      recipients: {
+          to: [{ address: email }],
+      },
+  };
+  try {
+    const poller = await client.beginSend(emailMessage);
+    await poller.pollUntilDone();
+    console.log("email done");
+    
+    return true;
+} catch (err) {
+    console.error('Error sending email:', err);
+    return false;
+}
+};

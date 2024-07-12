@@ -14,6 +14,7 @@ import financials from './router/financial.router.js';
 import cdbrouter from './router/cdb.router.js';
 import striperouter from './router/stripe.router.js';
 import blobrouter from './router/blob.router.js'
+import grootrouter from './router/groot.router.js'
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import solrouter from './router/solr.router.js';
@@ -49,11 +50,12 @@ if (cluster.isPrimary) {
       app.use('/backend/stripe' , striperouter);
       app.use('/backend/blob' , blobrouter);
       app.use('/backend/solr',solrouter)
+      app.use('/backend/groot' ,grootrouter)
       
       
       
       
-      const port = 5003 ;
+      const port = 5001 ;
       app.listen(port, () => {
           console.log(`Server is running on port ${port}`);
       });

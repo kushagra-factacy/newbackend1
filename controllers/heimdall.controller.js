@@ -333,3 +333,23 @@ export const company_deals = async (req, res, next) => {
     next(new ApiError(500, "Internal Server Error", [], err.stack));
   }
 }
+
+// --------------------------------------------------------------------------
+export const deal_offset = async (req, res, next) => {
+  try{
+    const offset = req.query.offset;
+    const limit = req.query.limit;
+    const querySpec= {
+      query: `SELECT * FROM c where c.Status="Updated" OR c.Status = "Confirmed" ORDER BY  c.Deal_Date DESC OFFSET ${offset} LIMIT  ${limit}  `
+    }
+    const dbconnect = await connect(HEIMDALL,deal_id);
+    const { resources } = await dbconnect.container.items.query(querySpec).fetchAll();
+    res.send(resources);
+  }catch(err){
+    next(new ApiError(500, "Internal Server Error", [], err.stack));
+  }
+}
+
+
+// -----------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------
